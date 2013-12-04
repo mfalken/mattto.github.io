@@ -10,12 +10,12 @@ function hide(element) {
     element.setAttribute('hidden', 'true');
 }
 function show(element) {
-	element.removeAttribute('hidden');
+    element.removeAttribute('hidden');
 }
 button = document.querySelector('#button-1');
 button.addEventListener('click', function(e) {
-	buttons = document.querySelectorAll('button');
-	for (var i = 0; i < buttons.length; ++i) {
+    buttons = document.querySelectorAll('button');
+    for (var i = 0; i < buttons.length; ++i) {
         hide(buttons[i]);
     }
     div = document.querySelector('#dialog');
