@@ -1,14 +1,25 @@
 <!doctype html>
 <html>
 <body>
-<button id="remove-self">Click me</button>
-<button>Click me too</button>
-<button>Click me three</button>
+<button id="button-1">Click to open dialog</button>
+<button>Button 2</button>
+<button hidden>Button 3 - hidden=true</button>
+<div id="dialog" hidden>I'm the dialog<input type="checkbox">Hi</input></div>
 <script>
-button = document.querySelector('#remove-self');
-button.focus();
+function hide(element) {
+    element.setAttribute('hidden', 'true');
+}
+function show(element) {
+	element.removeAttribute('hidden');
+}
+button = document.querySelector('#button-1');
 button.addEventListener('click', function(e) {
-    e.currentTarget.remove();
+	buttons = document.querySelectorAll('button');
+	for (var i = 0; i < buttons.length; ++i) {
+        hide(buttons[i]);
+    }
+    div = document.querySelector('#dialog');
+    show(div);
 });
 </script>
 </body>
