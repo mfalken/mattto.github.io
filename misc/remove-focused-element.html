@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+<body>
+<button id="remove-self">Click me</button>
+<button>Click me too</button>
+<button>Click me three</button>
+<script>
+button = document.querySelector('#remove-self');
+button.focus();
+button.addEventListener('click', function(e) {
+    e.currentTarget.remove();
+});
+</script>
+</body>
+</html>
