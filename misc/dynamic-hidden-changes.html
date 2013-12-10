@@ -1,9 +1,13 @@
 <!doctype html>
 <html>
 <body>
-<button id="button-1">Click to open dialog</button>
+<div id="page">
+<button id="open-dialog">Click to open dialog</button>
 <button>Button 2</button>
-<button hidden>Button 3 - hidden=true</button>
+<input id="focus-dialog" type="checkbox">
+<label for="focus-dialog">Give focus to dialog contents</label>
+ <button hidden>Button 3 - hidden=true</button>
+</div>
 <div id="dialog" hidden>I'm the dialog<input type="checkbox">Hi</input></div>
 <script>
 function hide(element) {
@@ -12,14 +16,16 @@ function hide(element) {
 function show(element) {
     element.removeAttribute('hidden');
 }
-button = document.querySelector('#button-1');
+var button = document.querySelector('#open-dialog');
 button.addEventListener('click', function(e) {
-    buttons = document.querySelectorAll('button');
-    for (var i = 0; i < buttons.length; ++i) {
-        hide(buttons[i]);
+    var contents = document.querySelectorAll('#page *');
+    for (var i = 0; i < contents.length; ++i) {
+        hide(contents[i]);
     }
-    div = document.querySelector('#dialog');
-    show(div);
+    var dialog = document.querySelector('#dialog');
+    show(dialog);
+    if (document.querySelector('#focus-dialog').checked)
+        dialog.querySelector('input').focus();
 });
 </script>
 </body>
