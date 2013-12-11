@@ -12,7 +12,10 @@ Paragraph text
 <p>
 <button id="open-modal-dialog">Open modal dialog</button>
 <button id="open-modal-dialog-with-autofocused-button">Open modal dialog with autofocused button</button>
-<button id="open-modal-dialog-with-focus">Open modal dialog that itself is focused</button>
+<button id="open-modal-dialog-with-default-focus">Open focusable modal dialog that gets default focus</button>
+<button id="open-modal-dialog-with-forced-focus">Open focusable modal dialog and force focus</button>
+<button id="open-modal-dialog-with-no-controls">Open modal dialog with no controls</button>
+<button id="open-dialog">Open non-modal dialog</button>
 
 <dialog id="modal-dialog">
 I'm in the modal dialog.
@@ -21,13 +24,29 @@ I'm in the modal dialog.
 
 <dialog id="modal-dialog-with-autofocused-button">
 I'm in the modal dialog.
-<button autofocus>Close</button>
-</dialog>
-
-<dialog id="modal-dialog-with-focus" tabindex=0>
-I'm in the modal dialog.
+<button>Yes</button>
+<button autofocus>No</button>
 <button>Close</button>
 </dialog>
+
+<dialog id="modal-dialog-with-default-focus" tabindex=0>
+I'm in the modal dialog.
+<button disabled>Disabled button</button>
+</dialog>
+
+<dialog id="modal-dialog-with-forced-focus" tabindex=0>
+I'm in the modal dialog.
+</dialog>
+
+<dialog id="modal-dialog-with-no-controls">
+I'm in the modal dialog.
+</dialog>
+
+<dialog id="dialog">
+I'm in the non-modal dialog.
+<button>Close</button>
+</dialog>
+
 <script>
 document.querySelector('#open-modal-dialog').addEventListener('click', function(e) {
     document.querySelector('#modal-dialog').showModal();
@@ -35,12 +54,19 @@ document.querySelector('#open-modal-dialog').addEventListener('click', function(
 document.querySelector('#open-modal-dialog-with-autofocused-button').addEventListener('click', function(e) {
     document.querySelector('#modal-dialog-with-autofocused-button').showModal();
 });
-document.querySelector('#open-modal-dialog-with-focus').addEventListener('click', function(e) {
-    var dialog = document.querySelector('#modal-dialog-with-focus');
-    dialog.showModal();
-    dialog.focus();
+document.querySelector('#open-modal-dialog-with-default-focus').addEventListener('click', function(e) {
+    document.querySelector('#modal-dialog-with-default-focus').showModal();
 });
-
+document.querySelector('#open-modal-dialog-with-forced-focus').addEventListener('click', function(e) {
+    document.querySelector('#modal-dialog-with-forced-focus').showModal();
+    document.querySelector('#modal-dialog-with-forced-focus').focus();
+});
+document.querySelector('#open-modal-dialog-with-no-controls').addEventListener('click', function(e) {
+    document.querySelector('#modal-dialog-with-no-controls').showModal();
+});
+document.querySelector('#open-dialog').addEventListener('click', function(e) {
+    document.querySelector('#dialog').show();
+});
 var closeButtons = document.querySelectorAll('dialog button');
 for (i = 0; i < closeButtons.length; ++i) {
     closeButtons[i].addEventListener('click', function(e) {
