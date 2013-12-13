@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <title>Basic dialog accessibility sample</title>
 <meta name="viewport" content="initial-scale=1.0">
+<head>
+<script>
+function clickedInDialog(dialog, mouseEvent) {
+    var rect = dialog.getBoundingClientRect();
+    return rect.top <= mouseEvent.clientY && mouseEvent.clientY <= rect.top + rect.height
+        && rect.left <= mouseEvent.clientX && mouseEvent.clientX <= rect.left + rect.width;
+}
+</script>
+</head>
 <body>
 <p>
 Paragraph text
@@ -67,10 +76,20 @@ document.querySelector('#open-modal-dialog-with-no-controls').addEventListener('
 document.querySelector('#open-dialog').addEventListener('click', function(e) {
     document.querySelector('#dialog').show();
 });
+
 var closeButtons = document.querySelectorAll('dialog button');
 for (i = 0; i < closeButtons.length; ++i) {
     closeButtons[i].addEventListener('click', function(e) {
         e.currentTarget.parentNode.close();
+    });
+}
+
+dialogs = document.querySelectorAll('dialog');
+for (i = 0; i < dialogs.length; ++i) {
+    dialogs[i].addEventListener('click', function(e) {
+        var dialog = e.currentTarget;
+        if (dialog.open && !clickedInDialog(dialog, e))
+            dialog.close();
     });
 }
 </script>
