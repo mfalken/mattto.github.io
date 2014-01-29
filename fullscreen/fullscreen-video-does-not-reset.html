@@ -5,12 +5,24 @@ Here's my video.
 
 <object type="application/x-shockwave-flash" data="resources/player_flv_1.1.4.swf" width="320" height="240">
      <param name="movie" value="player_flv_1.1.4.swf" />
-     <param name="FlashVars" value="flv=video.flv" />
+     <param name="FlashVars" id="vars" value="flv=20051210-w50s.flv" />
 </object>
-<button>Go fullscreen.</button>
+<button id="go-fullscreen">Go fullscreen.</button>
+<button id="change-video">Change plugin</button>
 <script>
-document.querySelector('button').addEventListener('click', function(e) {
+document.querySelector('#go-fullscreen').addEventListener('click', function(e) {
     document.querySelector('object').webkitRequestFullscreen();
+});
+document.querySelector('#change-video').addEventListener('click', function(e) {
+    var obj = document.querySelector('object')
+    /*;
+    if (obj.type == 'resources/player_flv_1.1.4.swf')
+        obj.data = 'resources/ugh.swf';
+    else
+        obj.data = 'resources/player_flv_1.1.4.swf';
+        */
+
+    obj.type = 'aroigjaerg';
 });
 </script>
 </body>
