@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Page Title</title>
+<button>Open https window</button>
+<div id="status"></div>
+<script>
+var button = document.querySelector('button');
+button.addEventListener('click', e => {
+  window.open('https://mattto.github.io/sw/test/insecure-opener.html');
+});
+
+function setStatus(str) {
+  var statusDiv = document.querySelector('div');
+  statusDiv.textContent = str;
+}
+
+navigator.serviceWorker.getRegistration()
+  .then(reg => setStatus('I can access service worker'))
+  .catch(error => setStatus('I cannot access service worker: ' + error.message));
+</script>
