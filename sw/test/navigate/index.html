@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Page Title</title>
+<body>
+  <button id="register">Register</button>
+  <button id="unregister">Unregister</button>
+  <button id="ping">Message the Worker</button>
+  <div id="controller"></div>
+  <div id="status"></div>
+</body>
+<script>
+function showController() {
+  document.querySelector('#controller').textContent = 'controller: ' + navigator.serviceWorker.controller;
+}
+function showStatus(str) {
+  document.querySelector('#status').textContent = str;
+}
+
+showController();
+navigator.serviceWorker.addEventListener('controllerchange', showController);
+
+document.querySelector('#register').addEventListener('click', evt => {
+  showStatus('registering');
+  navigator.serviceWorker.register('sw.js')
+    .then(reg => showStatus('registered'))
+    .catch(error => showStatus('error: ' + error.message));
+});
+
+document.querySelector('#unregister').addEventListener('click', evt => {
+  showStatus('unregistering');
+  navigator.serviceWorker.getRegistration()
+    .then(reg => {
+        if (reg)
+          return reg.unregister();
+      })
+    .then(() => {
+        showStatus('unregistered');
+      })
+    .catch(error => showStatus('error: ' + error.message));
+});
+
+document.querySelector('#ping').addEventListener('click', evt => {
+  showStatus('waiting for active worker');
+  navigator.serviceWorker.ready
+    .then(reg => reg.active.postMessage('ping'))
+    .then(() => showStatus('pinged'));
+});
+</script>
+
