@@ -6,9 +6,8 @@
 </body>
 <script>
 var iframe = document.createElement('iframe');
-var secureUrl = new URL(document.baseURI);
-secureUrl.protocol = 'http';
-secureUrl.pathname += 'intercept-tester.html';
+var secureUrl = new URL('intercept-tester.html', document.baseURI);
+secureUrl.protocol = 'https';
 iframe.src = secureUrl.toString();
 document.body.appendChild(iframe);
 </script>

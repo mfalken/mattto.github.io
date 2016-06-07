@@ -13,9 +13,8 @@ function setStatus(str) {
 }
 
 var insecureLink = document.querySelector('#insecure-link');
-var insecureUrl = new URL(document.baseURI);
+var insecureUrl = new URL('insecure.html', document.baseURI);
 insecureUrl.protocol = 'http';
-insecureUrl.pathname += 'insecure.html';
 insecureLink.href = insecureUrl.toString();
 
 navigator.serviceWorker.register('sw.js')
