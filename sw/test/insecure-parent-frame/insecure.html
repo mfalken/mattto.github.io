@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>insecure</title>
+<body>
+<div>The iframe should not have content served by service worker.</div>
+</body>
+<script>
+var iframe = document.createElement('iframe');
+var secureUrl = new URL(document.baseURI);
+secureUrl.protocol = 'http';
+secureUrl.pathname += 'intercept-tester.html';
+iframe.src = secureUrl.toString();
+document.body.appendChild(iframe);
+</script>

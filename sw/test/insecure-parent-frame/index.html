@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Insecure parent frame</title>
+<body>
+<div id="status">Waiting for service worker</div>
+<a id="insecure-link">Go to insecure context.</a>
+</body>
+<script>
+
+function setStatus(str) {
+  var statusDiv = document.querySelector('#status');
+  statusDiv.textContent = str;
+}
+
+var insecureLink = document.querySelector('#insecure-link');
+var insecureUrl = new URL(document.baseURI);
+insecureUrl.protocol = 'http';
+insecureUrl.pathname += 'insecure.html';
+insecureLink.href = insecureUrl.toString();
+
+navigator.serviceWorker.register('sw.js')
+  .catch(error => setStatus(error.message || error.name || error));
+navigator.serviceWorker.ready
+  .then(() => setStatus('service worker is ready'));
+</script>
+
