@@ -2,5 +2,18 @@
 <meta charset="utf-8">
 <title>intercept tester</title>
 <body>
-Service worker did not serve this page.
+Service worker did not serve this page. The controller should remain
+null after attempting to claim clients.
+<div id="status">controller: waiting</div>
+<script>
+function setStatus(str) {
+  var statusDiv = document.querySelector('#status');
+  statusDiv.textContent = str;
+}
+
+setStatus('controller: ' + navigator.serviceWorker.controller);
+navigator.serviceWorker.addEventListener('controllerchange', e => {
+  setStatus('controller: ' + navigator.serviceWorker.controller);
+});
+</script>
 </body>

@@ -3,7 +3,17 @@
 <title>Insecure parent frame</title>
 <body>
 <div id="status">Waiting for service worker</div>
+<button id="claim">Claim Clients</button>
+<div>
 <a id="insecure-link">Go to insecure context.</a>
+</div>
+<div>
+  To use this test:
+  <ul>
+    <li>Once you see "service worker is ready", follow the "Go to insecure context" link. The page contains an iframe that should not be intercepted by the service worker.</li>
+    <li>Try clicking "Claim Clients". The service worker should still not control the iframe.</li>
+  </ul>
+</div>
 </body>
 <script>
 
@@ -16,6 +26,16 @@ var insecureLink = document.querySelector('#insecure-link');
 var insecureUrl = new URL('insecure.html', document.baseURI);
 insecureUrl.protocol = 'http';
 insecureLink.href = insecureUrl.toString();
+
+var claimButton = document.querySelector('#claim');
+claimButton.addEventListener('click', e => {
+    navigator.serviceWorker.ready
+      .then(reg => {
+          var channel = new MessageChannel();
+          channel.port1.onmessage = (e => setStatus(e.data));
+          reg.active.postMessage({port: channel.port2}, [channel.port2]);
+        });
+  });
 
 navigator.serviceWorker.register('sw.js')
   .catch(error => setStatus(error.message || error.name || error));
