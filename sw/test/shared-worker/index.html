@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Insecure parent frame</title>
+<body>
+<div id="status">Waiting for service worker</div>
+<button id="register">Register service worker</button>
+<button id="create-shared-worker">Create shared worker</button>
+<button id="ping-shared-worker">Ping shared worker</button>
+<button id="claim">Claim Clients</button>
+<script>
+function setStatus(str) {
+  var statusDiv = document.querySelector('#status');
+  statusDiv.textContent = str;
+}
+
+var claimButton = document.querySelector('#claim');
+claimButton.addEventListener('click', e => {
+    navigator.serviceWorker.ready
+      .then(reg => {
+          var channel = new MessageChannel();
+          channel.port1.onmessage = (e => setStatus(e.data));
+          reg.active.postMessage({port: channel.port2}, [channel.port2]);
+        });
+  });
+
+var registerButton = document.querySelector('#register');
+registerButton.addEventListener('click', e => {
+    navigator.serviceWorker.register('sw.js')
+      .catch(error => setStatus(error.message || error.name || error));
+  });
+
+var sharedWorker;
+var createSharedWorkerButton = document.querySelector('#create-shared-worker');
+createSharedWorkerButton.addEventListener('click', e => {
+    sharedWorker = new SharedWorker('shared-worker.js');
+    sharedWorker.port.onmessage = (event => {
+        console.log(event.data);
+      });
+  });
+
+var pingSharedWorkerButton = document.querySelector('#ping-shared-worker');
+pingSharedWorkerButton.addEventListener('click', e => {
+    sharedWorker.port.postMessage('ping');
+  });
+
+navigator.serviceWorker.ready
+  .then(() => setStatus('service worker is ready'));
+</script>
+
