@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<!-- DO NOT SUBMIT: Fix Page Title. Missing tags? http://go/optional-html -->
+<title>Page Title</title>
+<button id="set-preload">Set preload</button>
+<button id="get-preload">Get preload</button>
+<div id="divlog"></div>
+<input type="button" onclick="register()" value="Register SW"><br>
+<a href="./scope/no_respondWith.html">No respondWith()</a><br>
+<a href="./scope/respondWith_preloadResponse.html">event.respondWith(event.preloadResponse);</a><br>
+<br>
+<a href="./out_of_scope.html">out of SW scope</a><br>
+<br>
+<a href="./normal_scope/no_respondWith.html">normal SW: No respondWith()</a><br>
+<br>
+<a href="./scope/respondWith_new_Response.html">event.respondWith(new Response());</a><br>
+<script>
+function wait_for_active(reg) {
+  return new Promise((resolve, reject) => {
+      if (reg.active)
+        resolve();
+      let worker = reg.waiting || reg.installing;
+      worker.addEventListener('statechange', e => {
+          if (worker.state == 'activated')
+            resolve();
+          if (worker.state == 'redundant')
+            reject();
+        });
+    });
+}
+
+function log(s) {
+  let divlog = document.querySelector('#divlog');
+  let span = document.createElement('span');
+  span.textContent = s;
+  divlog.appendChild(span);
+  let br = document.createElement('br');
+  divlog.appendChild(br);
+}
+
+function register() {
+  let preload_registration;
+  let normal_registration;
+  Promise.all([
+  navigator.serviceWorker.register("./sw.js", {scope: "./scope/"}),
+  navigator.serviceWorker.register("./normal_sw.js", {scope: "./normal_scope/"})])
+    .then(function(registrations) {
+        preload_registration = registrations[0];
+        normal_registration = registrations[1];
+        return wait_for_active(preload_registration);
+      })
+    .then(() => {
+        log('OK. Click test');
+      })
+    .catch(function(error) {
+        alert("error");
+        console.log(error);
+      });
+}
+
+let getPreloadButton = document.querySelector('#get-preload');
+getPreloadButton.addEventListener('click', e => {
+    navigator.serviceWorker.getRegistration('./scope/')
+      .then(reg => {
+          return reg.active.getNavigationPreload();
+        })
+      .then(res => {
+          log('got:' + JSON.stringify(res));
+        });
+  });
+let setPreloadButton = document.querySelector('#set-preload');
+getPreloadButton.addEventListener('click', e => {
+    navigator.serviceWorker.getRegistration('./scope/')
+      .then(reg => {
+          return reg.active.setNavigationPreload({ value: 'tips', terrible: 'bad' });
+        })
+      .then(res => {
+          log('set');
+        });
+  });
+</script>
+
