@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html manifest="example.appcache">
+<meta charset="utf-8">
+<title>service worker versus AppCache</title>
+<body>
+<div id="status">no controller</div>
+<ul id="log"></ul>
+<button id="register">Register</button>
+<p>Who will win? This site is using both!</p>
+<img src="abe.png">
+<script>
+function appendLog(str) {
+  const logList = document.querySelector('#log');
+  const item = document.createElement('li');
+  item.textContent = str;
+  logList.appendChild(item);
+}
+
+function setStatus(str) {
+  const statusDiv = document.querySelector('#status');
+  statusDiv.textContent = str;
+}
+
+const registerButton = document.querySelector('#register');
+registerButton.addEventListener('click', e => {
+  navigator.serviceWorker.register('sw.js');
+});
+
+if (navigator.serviceWorker.controller) {
+  setStatus('this page is controlled by service worker');
+  appendLog('controlled by service worker');
+} else {
+  navigator.serviceWorker.ready.then(reg => {
+    setStatus('service worker ready; please reload');
+    appendLog('service worker ready');
+  });
+}
+
+window.applicationCache.addEventListener('cached', e => {
+  appendLog('appcache cached event');
+});
+window.applicationCache.addEventListener('checking', e => {
+  appendLog('appcache checking event');
+});
+window.applicationCache.addEventListener('downloading', e => {
+  appendLog('appcache downloading event');
+});
+window.applicationCache.addEventListener('updateready', e => {
+  appendLog('appcache updateready event');
+});
+window.applicationCache.addEventListener('noupdate', e => {
+  appendLog('appcache noupdate event');
+});
+</script>
+</body>
+</html>
