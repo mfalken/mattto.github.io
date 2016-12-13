@@ -1,10 +1,10 @@
 CACHE MANIFEST
 # v1 - 2016-12-13
 # This is a comment.
-/sw-and-appcache/abe.png
-/sw-and-appcache/compass.jpg
-/sw-and-appcache/stamp.jpg
+/sw/test/sw-and-appcache/abe.png
+/sw/test/sw-and-appcache/compass.jpg
+/sw/test/sw-and-appcache/stamp.jpg
 
 NETWORK:
-/sw-and-appcache
-/sw-and-appcache/index.html
+/sw/test/sw-and-appcache
+/sw/test/sw-and-appcache/index.html
