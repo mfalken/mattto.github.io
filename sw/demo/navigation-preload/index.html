@@ -35,7 +35,7 @@ self.addEventListener('activate', e => {
     // The browser does not support navigation preload.
     return;
   }
-  self.registration.navigationPreload.enable();
+  e.waitUntil(self.registration.navigationPreload.enable());
 });
 </pre>
 

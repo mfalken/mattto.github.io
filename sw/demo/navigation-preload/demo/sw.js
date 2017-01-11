@@ -3,7 +3,7 @@ self.addEventListener('activate', e => {
     console.log('The browser does not support navigation preload.');
     return;
   }
-  self.registration.navigationPreload.enable();
+  e.waitUntil(self.registration.navigationPreload.enable());
 });
 
 
