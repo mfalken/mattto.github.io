@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Navigation preload</title>
+<style>
+pre.sample {
+  background-color: #DDFFDD;
+  color: green;
+  padding: 1em;
+  margin: 1em;
+}
+</style>
+</head>
+<h1>Navigation preload</h1>
+<p>Navigation preload is part of the
+<a href="https://w3c.github.io/ServiceWorker/">Service Worker specification</a>.
+It lets the browser send a “preload” network request for a navigation without
+blocking on the fetch event handler of the relevant service worker. The service
+worker will then have access to the preload response inside its fetch event
+handler. Common use cases are to respond with the preload response directly, or
+use it to populate the response.</p>
+
+<h2>Sample code</h2>
+<p>To enable navigation preload, call
+<code>NavigationPreloadManager.enable()</code>. You can get a
+<code>NavigationPreloadManager</code> via
+<code>ServiceWorkerRegistration.navigationPreload</code>. The
+registration must have an active service worker first.
+
+<p>Inside your service worker:
+<pre class="sample">
+self.addEventListener('activate', e => {
+  if (!self.registration.navigationPreload) {
+    // The browser does not support navigation preload.
+    return;
+  }
+  self.registration.navigationPreload.enable();
+});
+</pre>
+
+Once enabled, a navigation preload request will be sent for navigations inside the service worker's scope.
+You can access the preload response inside the fetch event for the navigation.
+
+<p>Inside your service worker:
+<pre class="sample">
+self.addEventListener('fetch', e => {
+  if (!e.preloadResponse) {
+    // The browser does not support navigation preload.
+    return;
+  }
+  if (e.request.url.endsWith('?use-preload') {
+    e.respondWith(e.preloadResponse);
+  })
+});
+</pre>
+
+<p>Now when you navigate to <code>test.html?use-preload</code>, the service worker
+will respond with the preload response. See the <a href="demo">live demo</a>.
+
+<p>Navigation preload requests also have a <code>ServiceWorkerNavigationPreload</code>
+HTTP header, whose value defaults to <code>true</code>. You can customize the
+header value through the NavigationPreloadManager API. See the <a
+  href="https://w3c.github.io/ServiceWorker/">Service Worker specification</a>
+for more details.
+
+<h2>Links</h2>
+<ul>
+  <li><a href="https://www.chromestatus.com/feature/5734842339688448">Chrome Status</a></li>
+  <li><a
+  href="https://bugs.chromium.org/p/chromium/issues/detail?id=649558">Chromium
+  implementation bug</a></li>
+  <li><a
+  href="https://bugs.chromium.org/p/chromium/issues/detail?id=661071&desc=3">Chromium
+  launch bug</a></li>
+  <li><a href="https://github.com/w3c/ServiceWorker/issues/920">Spec issue</li>
+  <li><a href="https://youtu.be/gTsvhefesbc">horo's demo movie</a></li>
+</ul>
+
+</html>

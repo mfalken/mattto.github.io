@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Navigation preload demo</title>
+<style>
+pre.sample {
+  background-color: #DDFFDD;
+  color: green;
+  padding: 1em;
+  margin: 1em;
+}
+</style>
+</head>
+<h1>Navigation preload demo</h1>
+<div id="status">not ready; no registration</div>
+<ul>
+  <li><a href="test.html?use-preload">use preload</a>
+  <li><a href="test.html">don't use preload</a>
+</ul>
+<p>See the <a href="../index.html">explanation</a> of this demo. The two links
+visibly have the same result, but the first link is using the navigation preload
+response and the second is a normal navigation (see console log). The difference
+is that the navigation preload request is sent without waiting for the service
+worker to start up.
+</div>
+<script>
+const UNSUPPORTED_BROWSER =
+  'The browser does not support navigation preload. For Chrome, this demo requires Chrome 57+ and --enable-features=ServiceWorkerNavigationPreload';
+
+function setStatus(str) {
+  const statusDiv = document.querySelector('#status');
+  statusDiv.textContent = str;
+}
+
+function setup() {
+  if (!navigator.serviceWorker)
+    return;
+  navigator.serviceWorker.register('sw.js')
+    .then(reg => {
+      if (!reg.navigationPreload) {
+        reg.unregister();
+        throw UNSUPPORTED_BROWSER;
+      }
+      return navigator.serviceWorker.ready;
+    })
+    .then(reg => {
+      if (reg) {
+        setStatus('Navigation preload is enabled! Try the links below.');
+      }
+    })
+    .catch(err => {
+      setStatus('Error: ' + err)
+    });
+}
+
+setup();
+</script>
+</html>
+

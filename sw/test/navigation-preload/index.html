@@ -2,7 +2,9 @@
 <meta charset="utf-8">
 <!-- DO NOT SUBMIT: Fix Page Title. Missing tags? http://go/optional-html -->
 <title>Page Title</title>
-<button id="set-preload">Set preload</button>
+<button id="enable-preload">enable preload</button>
+<button id="disable-preload">disable preload</button>
+<button id="set-header">set header</button>
 <button id="get-preload">Get preload</button>
 <div id="divlog"></div>
 <input type="button" onclick="register()" value="Register SW"><br>
@@ -62,21 +64,45 @@ let getPreloadButton = document.querySelector('#get-preload');
 getPreloadButton.addEventListener('click', e => {
     navigator.serviceWorker.getRegistration('./scope/')
       .then(reg => {
-          return reg.active.getNavigationPreload();
+          return reg.navigationPreload.getState();
         })
       .then(res => {
           log('got:' + JSON.stringify(res));
         });
   });
-let setPreloadButton = document.querySelector('#set-preload');
-getPreloadButton.addEventListener('click', e => {
+
+let enablePreloadButton = document.querySelector('#enable-preload');
+enablePreloadButton.addEventListener('click', e => {
     navigator.serviceWorker.getRegistration('./scope/')
       .then(reg => {
-          return reg.active.setNavigationPreload({ value: 'tips', terrible: 'bad' });
+          return reg.navigationPreload.enable();
         })
       .then(res => {
-          log('set');
+          log('enabled');
         });
   });
+
+let disablePreloadButton = document.querySelector('#disable-preload');
+disablePreloadButton.addEventListener('click', e => {
+    navigator.serviceWorker.getRegistration('./scope/')
+      .then(reg => {
+          return reg.navigationPreload.disable();
+        })
+      .then(res => {
+          log('disabled');
+        });
+  });
+
+let setHeaderButton = document.querySelector('#set-header');
+setHeaderButton.addEventListener('click', e => {
+    navigator.serviceWorker.getRegistration('./scope/')
+      .then(reg => {
+          return reg.navigationPreload.setHeaderValue('lolcatz');
+        })
+      .then(res => {
+          log('set header');
+        });
+  });
+
 </script>
 
