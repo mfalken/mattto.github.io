@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<!-- DO NOT SUBMIT: Fix Page Title. Missing tags? http://go/optional-html -->
+<title>Page Title</title>
+<body>
+<p>Ensure a service worker is registered for http://localhost:9797, then
+block third-party cookies and click the button to open an iframe to
+http://localhost:9797.
+
+A navigation preload request should not be sent to localhost:9797.
+</p>
+<div><button id="test">Test</button></div>
+<div><iframe src="http://localhost:9797/register.html"></iframe></div>
+
+<script>
+const button = document.querySelector('button');
+button.addEventListener('click', e => {
+  const iframe = document.createElement('iframe');
+  iframe.src = 'http://localhost:9797/test.html';
+  document.body.appendChild(iframe);
+});
+</script>
+</body>

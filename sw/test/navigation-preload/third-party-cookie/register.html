@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<!-- DO NOT SUBMIT: Fix Page Title. Missing tags? http://go/optional-html -->
+<title>Page Title</title>
+<body>
+  <div id="status">not registered</div>
+</body>
+<script>
+function setStatus(str) {
+  const statusDiv =  document.querySelector('#status');
+  statusDiv.textContent = str;
+}
+
+navigator.serviceWorker.register('sw.js')
+.then(reg => {
+  return navigator.serviceWorker.ready;
+})
+.then(reg => {
+  setStatus('OK: registered at: ' + document.location.host);
+})
+.catch(err => {
+  setStatus('failed to register: ' + err);
+});
+</script>
