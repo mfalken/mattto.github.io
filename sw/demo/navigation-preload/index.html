@@ -4,6 +4,11 @@
 <meta charset="utf-8">
 <title>Navigation preload</title>
 <style>
+em {
+  color: red;
+  font-style: normal;
+}
+
 pre.sample {
   background-color: #DDFFDD;
   color: green;
@@ -20,6 +25,34 @@ blocking on the fetch event handler of the relevant service worker. The service
 worker will then have access to the preload response inside its fetch event
 handler. Common use cases are to respond with the preload response directly, or
 use it to populate the response.</p>
+
+<h2>Origin trial</h2>
+<p>Chrome is experimenting with this feature and it is expected to be available as
+an <a
+  href=https://github.com/jpchase/OriginTrials/blob/gh-pages/developer-guide.md">origin
+  trial</a> starting in Chrome 57. Origin trials allow you to temporarily
+enable the feature for users of your website. To use this experimental API in
+Chrome with no flag, you'll need to <a
+href="http://bit.ly/OriginTrialSignup">request a token for your origin</a>
+and <a
+   href="https://github.com/jpchase/OriginTrials/blob/gh-pages/developer-guide.md">insert
+   it in your application</a>.</p>
+
+<p>Large sites should <em>NOT</em> enable the feature for all users. Since origin
+trials are globally shut off if usage exceeds 0.03% of all Chrome page loads,
+large sites should enable the feature only for a fraction of its users.</p>
+
+<p>If you do experiment with this feature, you can send us feedback at
+<a
+   href="https://groups.google.com/a/chromium.org/forum/#!forum/service-worker-discuss">service-worker-discuss</a>
+or join the <a href="https://github.com/w3c/ServiceWorker/issues/920">spec
+  discussion</a>. In case of a Chrome bug, you can <a
+  href="https://crbug.com/new">file an issue</a> here. Please include the words
+"service worker navigation preload" in the issue Summary.</p>
+
+<p>For development purposes, you can also enable the feature locally using
+<code>--enable-features=ServiceWorkerNavigationPreload</code> starting in
+Chrome 57.</p>
 
 <h2>Sample code</h2>
 <p>To enable navigation preload, call
