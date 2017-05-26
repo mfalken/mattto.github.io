@@ -27,10 +27,12 @@ self.addEventListener('fetch', function(event) {
       if (resp == undefined) {
         return new Response('undef');
       }
-      const resolution_time = performance.now() - t0;
-      console.error('resolution_time: ' + resolution_time);
+      const t2 = performance.now();
+      console.error('resolution_time_split: ' + (t2 - t1));
+      console.error('resolution_time: ' + (t2 - t0));
       return resp;
     }));
+    const t1 = performance.now();
     return;
   }
 });
