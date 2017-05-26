@@ -8,7 +8,7 @@ function busySleep(millisec)
 }
 
 // Simulate heavy Service Worker script.
-busySleep(500);
+busySleep(5000);
 
 self.addEventListener('fetch', function(event) {
   console.log(event.request.url);
