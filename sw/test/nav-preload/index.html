@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>nav preload</title>
+<button id="enable-preload">enable preload</button>
+<button id="disable-preload">disable preload</button>
+<button id="set-header">set header</button>
+<button id="get-preload">Get preload</button>
+<div id="divlog"></div>
+<input type="button" onclick="register()" value="Register SW"><br>
+<a href="./scope/no_respondWith.html">No respondWith()</a><br>
+<a href="./scope/respondWith_preloadResponse.html">event.respondWith(event.preloadResponse);</a><br>
+<script>
+function wait_for_active(reg) {
+  return new Promise((resolve, reject) => {
+      if (reg.active)
+        resolve();
+      let worker = reg.waiting || reg.installing;
+      worker.addEventListener('statechange', e => {
+          if (worker.state == 'activated')
+            resolve();
+          if (worker.state == 'redundant')
+            reject();
+        });
+    });
+}
+
+function log(s) {
+  let divlog = document.querySelector('#divlog');
+  let span = document.createElement('span');
+  span.textContent = s;
+  divlog.appendChild(span);
+  let br = document.createElement('br');
+  divlog.appendChild(br);
+}
+
+function register() {
+  let preload_registration;
+  navigator.serviceWorker.register("./sw.js", {scope: "./scope/"})
+    .then(function(registration) {
+        return wait_for_active(registration);
+      })
+    .then(() => {
+        log('OK. Click test');
+      })
+    .catch(function(error) {
+        alert("error");
+        console.log(error);
+      });
+}
+
+let getPreloadButton = document.querySelector('#get-preload');
+getPreloadButton.addEventListener('click', e => {
+    navigator.serviceWorker.getRegistration('./scope/')
+      .then(reg => {
+          return reg.navigationPreload.getState();
+        })
+      .then(res => {
+          log('got:' + JSON.stringify(res));
+        });
+  });
+
+let enablePreloadButton = document.querySelector('#enable-preload');
+enablePreloadButton.addEventListener('click', e => {
+    navigator.serviceWorker.getRegistration('./scope/')
+      .then(reg => {
+          return reg.navigationPreload.enable();
+        })
+      .then(res => {
+          log('enabled');
+        });
+  });
+
+let disablePreloadButton = document.querySelector('#disable-preload');
+disablePreloadButton.addEventListener('click', e => {
+    navigator.serviceWorker.getRegistration('./scope/')
+      .then(reg => {
+          return reg.navigationPreload.disable();
+        })
+      .then(res => {
+          log('disabled');
+        });
+  });
+
+let setHeaderButton = document.querySelector('#set-header');
+setHeaderButton.addEventListener('click', e => {
+    navigator.serviceWorker.getRegistration('./scope/')
+      .then(reg => {
+          return reg.navigationPreload.setHeaderValue('lolcatz');
+        })
+      .then(res => {
+          log('set header');
+        });
+  });
+
+</script>
+
