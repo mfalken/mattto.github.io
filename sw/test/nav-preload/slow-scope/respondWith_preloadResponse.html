@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Preload Response</title>
+<body>
+  preloadResponse from the server
+  <textarea rows=10 cols=80 id="results"></textarea>
+</body>
+<script>
+const resultDiv = document.querySelector('#results');
+const navigationTiming = performance.getEntriesByType("navigation")[0];
+let results = '';
+results += 'workerStart: ' + navigationTiming.workerStart + '\n';
+results += 'responseStart: ' + navigationTiming.responseStart + '\n';
+results += 'responseEnd: ' + navigationTiming.responseEnd + ' \n';
+resultDiv.textContent = results;
+</script>

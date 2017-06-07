@@ -9,6 +9,8 @@
 <input type="button" onclick="register()" value="Register SW"><br>
 <a href="./scope/no_respondWith.html">No respondWith()</a><br>
 <a href="./scope/respondWith_preloadResponse.html">event.respondWith(event.preloadResponse);</a><br>
+<a href="./slow-scope/no_respondWith.html">slow SW: No respondWith()</a><br>
+<a href="./slow-scope/respondWith_preloadResponse.html">slow SW: event.respondWith(event.preloadResponse);</a><br>
 <script>
 function wait_for_active(reg) {
   return new Promise((resolve, reject) => {
@@ -35,9 +37,12 @@ function log(s) {
 
 function register() {
   let preload_registration;
-  navigator.serviceWorker.register("./sw.js", {scope: "./scope/"})
-    .then(function(registration) {
-        return wait_for_active(registration);
+  Promise.all([
+   navigator.serviceWorker.register("./sw.js", {scope: "./scope/"}),
+   navigator.serviceWorker.register("./slow-sw.js", {scope: "./slow-scope/"})
+  ])
+    .then(function(regs) {
+        return regs.map(r => wait_for_active(r));
       })
     .then(() => {
         log('OK. Click test');
@@ -50,33 +55,42 @@ function register() {
 
 let getPreloadButton = document.querySelector('#get-preload');
 getPreloadButton.addEventListener('click', e => {
-    navigator.serviceWorker.getRegistration('./scope/')
-      .then(reg => {
-          return reg.navigationPreload.getState();
-        })
-      .then(res => {
-          log('got:' + JSON.stringify(res));
-        });
+  Promise.all([
+    navigator.serviceWorker.getRegistration('./scope/'),
+    navigator.serviceWorker.getRegistration('./slow-scope/')
+  ])
+  .then(regs => {
+    return regs.map(r => r.navigationPreload.getState());
+  })
+  .then(states => {
+    return states.map(r => log('got:' + JSON.stringify(r)));
   });
+});
 
 let enablePreloadButton = document.querySelector('#enable-preload');
 enablePreloadButton.addEventListener('click', e => {
-    navigator.serviceWorker.getRegistration('./scope/')
-      .then(reg => {
-          return reg.navigationPreload.enable();
+    Promise.all([
+        navigator.serviceWorker.getRegistration('./scope/'),
+        navigator.serviceWorker.getRegistration('./slow-scope/')
+        ])
+      .then(regs => {
+        return regs.map(r => r.navigationPreload.enable());
         })
-      .then(res => {
+      .then(regs => {
           log('enabled');
         });
   });
 
 let disablePreloadButton = document.querySelector('#disable-preload');
 disablePreloadButton.addEventListener('click', e => {
-    navigator.serviceWorker.getRegistration('./scope/')
-      .then(reg => {
-          return reg.navigationPreload.disable();
+    Promise.all([
+        navigator.serviceWorker.getRegistration('./scope/'),
+        navigator.serviceWorker.getRegistration('./slow-scope/')
+        ])
+      .then(regs => {
+        return regs.map(r => r.navigationPreload.disable());
         })
-      .then(res => {
+      .then(() => {
           log('disabled');
         });
   });
