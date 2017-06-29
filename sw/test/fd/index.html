@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<body>
+<div id="status">not ready</div>
+<div>controller: <span id="controller">nonone</span></div>
+<button id="create-iframes">Create 50 iframes</button>
+</body>
+<script>
+function setStatus(s) {
+  document.querySelector('#status').textContent = s;
+}
+
+function setController() {
+  let controllerSpan = document.querySelector('#controller');
+  let controller = navigator.serviceWorker.controller;
+  if (controller) {
+    controller = controller.scriptURL;
+    controllerSpan.textContent = controller;
+  } else {
+    controllerSpan.textContent = 'none';
+  }
+}
+
+let cacheBustId = 0;
+function nextCacheBustId() {
+  cacheBustId++;
+  return cacheBustId.toString();
+}
+
+const createIframesButton = document.querySelector('#create-iframes');
+createIframesButton.addEventListener('click', e => {
+  for (let i = 0; i < 50; i++) {
+    var iframe = document.createElement('iframe');
+    iframe.src = 'iframe.html?' + nextCacheBustId();
+    document.body.appendChild(iframe);
+  }
+});
+
+navigator.serviceWorker.register('sw.js')
+  .catch(err => { setStatus('could not reg: ' + err); });
+navigator.serviceWorker.ready.then(() => {setStatus('ready'); });
+
+setController();
+</script>
+
