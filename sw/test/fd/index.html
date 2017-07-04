@@ -3,6 +3,8 @@
 <body>
 <div id="status">not ready</div>
 <div>controller: <span id="controller">nonone</span></div>
+<button id="register">Register</button>
+<button id="unregister">Unregister</button>
 <button id="create-iframes">Create 50 iframes</button>
 </body>
 <script>
@@ -36,9 +38,20 @@ createIframesButton.addEventListener('click', e => {
   }
 });
 
-navigator.serviceWorker.register('sw.js')
-  .catch(err => { setStatus('could not reg: ' + err); });
-navigator.serviceWorker.ready.then(() => {setStatus('ready'); });
+const registerButton = document.querySelector('#register');
+registerButton.addEventListener('click', e => {
+  navigator.serviceWorker.register('sw.js')
+    .catch(err => { setStatus('could not reg: ' + err); });
+});
+
+const unregisterButton = document.querySelector('#unregister');
+unregisterButton.addEventListener('click', e => {
+  navigator.serviceWorker.ready.then(reg => {
+    reg.unregister().then(() => { setStatus('unregistered; reload if there is still a controller'); });
+  });
+});
+
+navigator.serviceWorker.ready.then(() => {setStatus('registered; reload if no controller'); });
 
 setController();
 </script>
