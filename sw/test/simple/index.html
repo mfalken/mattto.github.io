@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>not-cached</title>
+<body>
+<span id="status">not ready</span>
+<button id="register">register</button>
+<button id="make-img">Make img</button>
+<button id="hello-world">Fetch "hello world"</button>
+<button id="make-fetch">Fetch same-origin subresource</button>
+<button id="fetch-with-body">Fetch same-origin subresource with body</button>
+<button id="make-cros-fetch">Fetch cross-origin subresource</button>
+<button id="make-post">Fetch POST</button>
+<div>
+</div>
+<!-- <img src="abe.png"></img> -->
+</body>
+<script>
+function setStatus(str) {
+  const statusSpan = document.querySelector('#status');
+  statusSpan.textContent = str;
+}
+
+let count = 0;
+const imgButton = document.querySelector('#make-img');
+imgButton.addEventListener('click', e => {
+  const img = document.createElement('img');
+  count++;
+  img.src = 'abe.png';
+  document.body.appendChild(img);
+});
+
+const helloWorldButton = document.querySelector('#hello-world');
+helloWorldButton.addEventListener('click', e => {
+  fetch('hi?hello-world')
+    .then(resp => { return resp.text(); })
+    .then(text => { console.log(text); });
+});
+
+const fetchButton = document.querySelector('#make-fetch');
+fetchButton.addEventListener('click', e => {
+  fetch('abe.png');
+});
+
+const fetchWithBodyButton = document.querySelector('#fetch-with-body');
+fetchWithBodyButton.addEventListener('click', e => {
+  fetch('simple.html?fetch-with-body', { method: 'POST', body: 'i am the request body'})
+    .then(resp => { return resp.text(); })
+    .then(text => { console.log(text); });
+  // fetch('nothing.html', { body: 'this is the request body' });
+});
+
+const crosFetchButton = document.querySelector('#make-cros-fetch');
+crosFetchButton.addEventListener('click', e => {
+  fetch('https://upload.wikimedia.org/wikipedia/commons/0/02/Stamp_of_Ukraine_ua175cvs.jpg?bombit');
+});
+
+const postFetchButton = document.querySelector('#make-post');
+postFetchButton.addEventListener('click', e => {
+  const blob = new Blob(['it\'s me the blob', 'and more blob!']);
+  fetch('simple.html?post-with-blob-body', { method: 'POST', body: blob })
+});
+
+/*
+const registerButton = document.querySelector('#register');
+registerButton.addEventListener('click', e => {
+*/
+  navigator.serviceWorker.register('sw.js')
+    .catch(err => { setStatus('could not reg: ' + err); });
+  navigator.serviceWorker.ready.then(() => {setStatus('ready'); });
+  /*
+});
+*/
+// setInterval(() => { fetch('x.png'); }, 5000);
+</script>
+
