@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>workers</title>
+<script>
+var sw1 = undefined;
+var sw2 = undefined;
+var sw3 = undefined;
+var sw4 = undefined;
+function startSharedWorker1() {
+  sw1 = new SharedWorker('./sharedworker.js?1');
+  sw1.port.start();
+  sw1.port.addEventListener('message', e => console.log('msg from worker: ' + e.data));
+}
+function startSharedWorker2() {
+  sw2 = new SharedWorker('./sharedworker.js?2');
+}
+function startSharedWorker3() {
+  sw3 = new SharedWorker('./sharedworker.js?3');
+}
+function startSharedWorker4() {
+  sw4 = new SharedWorker('./sharedworker.js?4');
+}
+
+function addEmptyUnloadListener() {
+  window.addEventListener("beforeunload", function (e) {
+  });
+}
+
+function addUnloadListener() {
+  window.addEventListener("beforeunload", function (e) {
+    e.returnValue = "wait please";
+  });
+}
+
+function askSharedWorker1ToDoAFetch() {
+  sw1.port.postMessage('ping');
+}
+
+</script>
+<input type="button" onclick="startSharedWorker1()" value="startSharedWorker1">
+<input type="button" onclick="startSharedWorker2()" value="startSharedWorker2">
+<input type="button" onclick="startSharedWorker3()" value="startSharedWorker3">
+<input type="button" onclick="startSharedWorker4()" value="startSharedWorker4">
+<input type="button" onclick="addEmptyUnloadListener()" value="addEmptyUnloadListener">
+<input type="button" onclick="addUnloadListener()" value="addUnloadListener">
+<input type="button" onclick="askSharedWorker1ToDoAFetch()" value="askSharedWorker1ToDoAFetch">
+
