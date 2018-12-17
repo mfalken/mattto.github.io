@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Navigation Preload with Third-Party Cookies</title>
+<body>
+<p>Ensure a service worker is registered for <a
+href="https://navigation-preload.glitch.me/">https://navigation-preload.glitch.me/</a>,
+then block third-party cookies and click the button to open an iframe to
+https://navigation-preload.glitch.me/.
+
+A navigation preload request should not be sent to https://navigation-preload.glitch.me/.
+</p>
+<div><button id="test">Test</button></div>
+<div><iframe src="https://navigation-preload.glitch.me/check-nav-preload.html"></iframe></div>
+
+<script>
+const button = document.querySelector('button');
+button.addEventListener('click', e => {
+  const iframe = document.createElement('iframe');
+  iframe.src = 'https://navigation-preload.glitch.me/check-nav-preload.html';
+  document.body.appendChild(iframe);
+});
+</script>
+</body>
